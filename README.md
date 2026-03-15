@@ -1,5 +1,7 @@
 # LUNA - AI Assistant
 
+<img width="1536" height="1024" alt="Image" src="https://github.com/user-attachments/assets/4271e0e0-0b7f-4996-a993-ff27283c1173" />
+
 LUNA is a desktop AI assistant developed by **Joel Jacob**, a **III BSc Artificial Intelligence and Machine Learning student** at **Sree Narayana Guru College, Coimbatore**.
 
 It is designed to make human-computer interaction smarter and more natural through **voice commands**, **speech-to-text interaction**, **wake word detection**, and **gesture-based media control**.
