@@ -21,8 +21,7 @@ Add your demo video link here:
 [Voice Command Demo](PASTE_YOUR_VIDEO_LINK_HERE)
 
 ### Gesture Control Demo
-Add your demo video link here:  
-[Gesture Control Demo](https://youtu.be/FsxVMy7Yszo)
+[![Gesture Control Demo](https://img.youtube.com/vi/FsxVMy7Yszo/0.jpg)](https://youtu.be/FsxVMy7Yszo)
 
 ## Gesture Controls
 
