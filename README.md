@@ -16,6 +16,12 @@ It is designed to make human-computer interaction smarter and more natural throu
 - Chat-focused Tkinter UI
 - Background services for wake word and gesture detection
 
+  ## UI Reference Preview
+
+Below is the reference image of the UI used in LUNA for gesture-based media control.
+
+![UI Reference]<img width="1920" height="864" alt="Image" src="https://github.com/user-attachments/assets/a935145a-56b3-450f-a2e4-f98b239c49cd" />
+
 ## Gesture Reference Preview
 
 Below is the reference image of the hand gestures used in LUNA for gesture-based media control.
