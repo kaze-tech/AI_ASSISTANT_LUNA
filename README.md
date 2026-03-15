@@ -22,7 +22,7 @@ Add your demo video link here:
 
 ### Gesture Control Demo
 Add your demo video link here:  
-[Gesture Control Demo](PASTE_YOUR_VIDEO_LINK_HERE)
+[Gesture Control Demo](https://drive.google.com/open?id=1LtMiR4fysCHECG0_7dX3RwPoOjZJ-Qn6&usp=drive_fs)
 
 ## Gesture Controls
 
