@@ -64,7 +64,7 @@ https://github.com/user-attachments/assets/b8967cfa-203d-4795-9b13-6fe43e862852
 ## Setup (Windows)
 
 1. Make sure Ollama or a compatible server is running on `http://localhost:11434`
-2. Ensure your model is available, for example `gemma2:9b-it`
+2. Ensure your model is available, for example `smollm2-1.7b-instruct`
 3. Open PowerShell and run:
 
 ```powershell
