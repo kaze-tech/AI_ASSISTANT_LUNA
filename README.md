@@ -17,8 +17,7 @@ It is designed to make human-computer interaction smarter and more natural throu
 ## Demo Videos
 
 ### Voice Command Demo
-Add your demo video link here:  
-[Voice Command Demo](PASTE_YOUR_VIDEO_LINK_HERE)
+https://github.com/user-attachments/assets/75de1a96-49e2-430b-a4fb-02e5b750c3e7
 
 ### Gesture Control Demo
 https://github.com/user-attachments/assets/b8967cfa-203d-4795-9b13-6fe43e862852
