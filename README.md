@@ -39,7 +39,7 @@ https://github.com/user-attachments/assets/b8967cfa-203d-4795-9b13-6fe43e862852
 - `open youtube`
 - `open google`
 - `open notepad`
-- `power off`
+- `Queries and Questions`
 
 ## Project Structure
 
