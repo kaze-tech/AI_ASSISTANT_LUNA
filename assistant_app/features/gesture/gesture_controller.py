@@ -87,9 +87,11 @@ class GestureController:
             import mediapipe as mp
 
             if not hasattr(mp, "solutions"):
+                version = getattr(mp, "__version__", "unknown")
                 raise RuntimeError(
-                    "Installed mediapipe build does not expose 'solutions'. "
-                    "Install mediapipe==0.10.14 for hand gesture support."
+                    f"Incompatible mediapipe build detected ({version}): top-level 'solutions' is unavailable. "
+                    "Install mediapipe==0.10.14 in the active interpreter with "
+                    "'python -m pip install --force-reinstall mediapipe==0.10.14'."
                 )
 
             cap = cv2.VideoCapture(self.camera_index)

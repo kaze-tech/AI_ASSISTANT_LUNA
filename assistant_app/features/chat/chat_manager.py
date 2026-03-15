@@ -20,3 +20,24 @@ class ChatManager:
         reply = self.llm_client.generate(prompt)
         self.history.append(("assistant", reply))
         return reply
+
+    def ask_stream(self, user_text: str):
+        self.history.append(("user", user_text))
+
+        recent_turns = self.history[-self.max_history_turns :]
+        transcript = "\n".join(f"{role}: {content}" for role, content in recent_turns)
+        prompt = f"{self.system_prompt}\n\nConversation:\n{transcript}\nassistant:"
+
+        chunks: list[str] = []
+        try:
+            for chunk in self.llm_client.generate_stream(prompt):
+                chunks.append(chunk)
+                yield chunk
+        except Exception:
+            if chunks:
+                raise
+            reply = self.llm_client.generate(prompt)
+            chunks.append(reply)
+            yield reply
+
+        self.history.append(("assistant", "".join(chunks)))

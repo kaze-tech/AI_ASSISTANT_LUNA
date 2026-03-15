@@ -48,6 +48,7 @@ class AssistantUI:
         self.chat = ChatManager(llm, self.settings.system_prompt)
         self.commands = CommandRouter()
         self.tts = TTSEngine()
+        self._stream_marks: dict[str, str] = {}
 
         self.root = tk.Tk()
         self.root.title(f"{self.settings.assistant_name} Chat")
@@ -231,6 +232,7 @@ class AssistantUI:
         self._wake_capture_running = False
         self._media_poll_job = None
         self._closing = False
+        self._pending_exit_until = 0.0
 
         self._append("system", f"Connected to model: {self.settings.llm_model} at {self.settings.llm_base_url}")
         self._refresh_now_playing()
@@ -245,6 +247,42 @@ class AssistantUI:
         self.chat_log.insert(tk.END, f"{label}\n", tag)
         self.chat_log.insert(tk.END, f"{text}\n\n", "body")
         self.chat_log.see(tk.END)
+        self.chat_log.configure(state=tk.DISABLED)
+
+    def _append_stream_start(self, message_id: str, speaker: str) -> None:
+        self.chat_log.configure(state=tk.NORMAL)
+        tag = speaker if speaker in {"assistant", "system", "voice", "gesture"} else "body"
+        self.chat_log.insert(tk.END, f"{speaker.upper()}\n\n", tag)
+        content_index = self.chat_log.index(tk.END)
+        mark_name = f"stream_{message_id}"
+        self.chat_log.insert(tk.END, "\n\n", "body")
+        # Keep streamed content before the trailing spacer so later system
+        # messages are always inserted as a separate block.
+        self.chat_log.mark_set(mark_name, content_index)
+        self.chat_log.mark_gravity(mark_name, tk.RIGHT)
+        self.chat_log.see(tk.END)
+        self.chat_log.configure(state=tk.DISABLED)
+        self._stream_marks[message_id] = mark_name
+
+    def _append_stream_chunk(self, message_id: str, text: str) -> None:
+        mark_name = self._stream_marks.get(message_id)
+        if not mark_name:
+            return
+        self.chat_log.configure(state=tk.NORMAL)
+        self.chat_log.insert(mark_name, text, "body")
+        self.chat_log.see(tk.END)
+        self.chat_log.configure(state=tk.DISABLED)
+
+    def _append_stream_error(self, message_id: str, error_text: str) -> None:
+        self._append_stream_chunk(message_id, f"LLM error: {error_text}")
+        self._finish_stream(message_id)
+
+    def _finish_stream(self, message_id: str) -> None:
+        mark_name = self._stream_marks.pop(message_id, None)
+        if not mark_name:
+            return
+        self.chat_log.configure(state=tk.NORMAL)
+        self.chat_log.mark_unset(mark_name)
         self.chat_log.configure(state=tk.DISABLED)
 
     def _on_send(self, _event=None) -> None:
@@ -273,8 +311,19 @@ class AssistantUI:
         self.root.after(700, self._refresh_now_playing_once)
 
     def _on_middle_pinch(self) -> None:
-        self.root.after(0, lambda: self.now_playing_var.set("Gesture: Thumb+Middle (shutdown)"))
-        self.root.after(150, self._on_close)
+        now = time.time()
+        if now <= self._pending_exit_until:
+            self._pending_exit_until = 0.0
+            self.root.after(0, lambda: self.now_playing_var.set("Gesture: Thumb+Middle (exit confirmed)"))
+            self.root.after(150, self._on_close)
+            return
+
+        self._pending_exit_until = now + 2.0
+        self.root.after(0, lambda: self.now_playing_var.set("Gesture: Thumb+Middle (repeat to exit)"))
+        self.root.after(
+            0,
+            lambda: self._append("system", "Exit gesture detected. Repeat thumb+middle pinch within 2 seconds to close."),
+        )
 
     def _refresh_now_playing_once(self) -> None:
         title = get_now_playing_title()
@@ -330,12 +379,20 @@ class AssistantUI:
                 self.root.after(0, lambda: self._confirm_and_execute(command.confirm_action))
             return
 
-        try:
-            reply = self.chat.ask(text)
-        except Exception as exc:
-            reply = f"LLM error: {exc}"
+        message_id = str(time.time_ns())
+        self.root.after(0, lambda: self._append_stream_start(message_id, "assistant"))
 
-        self.root.after(0, lambda: self._append("assistant", reply))
+        try:
+            parts: list[str] = []
+            for chunk in self.chat.ask_stream(text):
+                parts.append(chunk)
+                self.root.after(0, lambda c=chunk: self._append_stream_chunk(message_id, c))
+            reply = "".join(parts).strip()
+        except Exception as exc:
+            self.root.after(0, lambda: self._append_stream_error(message_id, str(exc)))
+            return
+
+        self.root.after(0, lambda: self._finish_stream(message_id))
         if self.settings.speak_replies:
             self.tts.speak(reply)
 
@@ -371,6 +428,7 @@ class AssistantUI:
             self._media_poll_job = None
         self.gesture.stop()
         self.wake_word.stop()
+        self.chat.llm_client.close()
         self.root.destroy()
 
     def run(self) -> None:

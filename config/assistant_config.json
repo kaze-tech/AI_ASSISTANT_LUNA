@@ -18,7 +18,7 @@
     "phrase_time_limit": 7
   },
   "gesture": {
-    "camera_index": 0,
+    "camera_index": 1,
     "cooldown_seconds": 1.5,
     "show_camera_window": true,
     "hold_frames": 5,
