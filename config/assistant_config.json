@@ -1,0 +1,43 @@
+{
+  "llm": {
+    "base_url": "http://127.0.0.1:1234",
+    "generate_path": "/api/generate",
+    "model": "gemma-2-9b-it",
+    "api_type": "openai",
+    "max_tokens": 140,
+    "temperature": 0.4
+  },
+  "assistant": {
+    "name": "AI Assistant",
+    "system_prompt": "You are a concise, helpful desktop AI assistant.",
+    "speak_replies": false
+  },
+  "voice": {
+    "energy_threshold": 280,
+    "pause_threshold": 0.8,
+    "phrase_time_limit": 7
+  },
+  "gesture": {
+    "camera_index": 0,
+    "cooldown_seconds": 1.5,
+    "show_camera_window": true,
+    "hold_frames": 5,
+    "release_frames": 5,
+    "finger_margin": 0.025,
+    "pinch_distance_threshold": 0.045,
+    "pinch_hold_frames": 3,
+    "pinch_cooldown_seconds": 1.0
+  },
+  "wake_word": {
+    "enabled_by_default": true,
+    "access_key": "cnePgJPtt+LZ0fEAkVUexXFgVBY9D6G+K3SO2IQM6ntY3jVe2/6cCw==",
+    "keywords": [],
+    "keyword_paths": [
+      "./okay-Luna_en_windows_v4_0_0.ppn"
+    ],
+    "sensitivity": 0.6,
+    "device_index": -1,
+    "listen_timeout": 5,
+    "phrase_time_limit": 6
+  }
+}
