@@ -60,7 +60,7 @@ LUNA uses local language models for chat and assistant responses. The primary mo
 <img width="1898" height="931" alt="Image" src="https://github.com/user-attachments/assets/3b19af07-314a-426f-a0cf-ef6e31c3fe97" />
 
 
-## LM Studi Developer Logs
+## LM Studio Developer Logs
 
 Below is a screenshot of the developer logs showing LUNA running in the development environment.
 
